@@ -1,0 +1,59 @@
+{
+    "description": "Collection of the latest electronic items available in our store",
+    "metadata": {
+      "author": "Jane Smith",
+      "creationDate": "2024-01-10"
+    },
+    "items": [
+      {
+        "name": "Smartphone",
+        "description": "Flagship smartphone with 5G support and advanced camera features",
+        "price": 799
+      },
+      {
+        "name": "Laptop",
+        "description": "High-performance laptop with 16GB RAM and 512GB SSD storage",
+        "price": 1200
+      },
+      {
+        "name": "Tablet",
+        "description": "Lightweight tablet with 10-inch display, perfect for media and reading",
+        "price": 499
+      },
+      {
+        "name": "Wireless Earbuds",
+        "description": "Noise-cancelling wireless earbuds with Bluetooth 5.2",
+        "price": 199
+      },
+      {
+        "name": "Smartwatch",
+        "description": "Water-resistant smartwatch with heart rate monitor and GPS tracking",
+        "price": 299
+      },
+      {
+        "name": "Gaming Console",
+        "description": "Next-gen gaming console with 4K support and 1TB storage",
+        "price": 499
+      },
+      {
+        "name": "Bluetooth Speaker",
+        "description": "Portable Bluetooth speaker with deep bass and 12-hour battery life",
+        "price": 150
+      },
+      {
+        "name": "4K TV",
+        "description": "65-inch 4K Ultra HD Smart TV with HDR and built-in streaming apps",
+        "price": 900
+      },
+      {
+        "name": "Digital Camera",
+        "description": "Compact digital camera with 20MP sensor and 4K video recording",
+        "price": 700
+      },
+      {
+        "name": "Drone",
+        "description": "Camera drone with 1080p HD video and 30-minute flight time",
+        "price": 400
+      }
+    ]
+  }

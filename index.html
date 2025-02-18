@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Electronic Items</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .cont {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            width: 300px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .desc {
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            font-size: smaller;
+            color: #777;
+            text-align: right;
+        }
+
+        #genDesc {
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        #addForm label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #addForm input[type="text"],
+        #addForm input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+        }
+
+        #addForm input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .err {
+            color: red;
+            font-size: small;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Items</h1>
+    <div id="genDesc"></div>
+    <div class="cont" id="cardCont"></div>
+
+    <h2>Add Item</h2>
+    <form id="addForm">
+        <label for="name">Name:</label><input type="text" id="name" name="name" required><span class="err"
+            id="nameErr"></span><br><br>
+        <label for="desc">Description:</label><input type="text" id="desc" name="desc" required><span class="err"
+            id="descErr"></span><br><br>
+        <label for="price">Price:</label><input type="number" id="price" name="price" required min="0"><span class="err"
+            id="priceErr"></span><br><br>
+        <input type="submit" value="Add Item">
+    </form>
+
+    <script src="main.js"></script>
+
+</body>
+
+</html>
