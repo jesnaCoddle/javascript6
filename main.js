@@ -7,13 +7,17 @@ function formatDate(dateStr) {
 }
 
 function loadData() {
-    fetch('items.json')
-        .then(resp => resp.json())
-        .then(jsonData => {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'items.json', true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var jsonData = JSON.parse(xhr.responseText);
             data = jsonData;
             showItems(data.items);
             document.getElementById("genDesc").textContent = data.description;
-        });
+        }
+    };
+    xhr.send();
 }
 
 function showItems(items) {
@@ -24,11 +28,11 @@ function showItems(items) {
         const card = document.createElement("div");
         card.classList.add("card");
         card.innerHTML = `
-  <div class="title">${item.name}</div>
-  <div class="desc">${item.description}</div>
-  <div class="price">$${item.price}</div>
-  <div class="meta">Author: ${data.metadata.author} | Created: ${formatDate(data.metadata.creationDate)}</div>
-`;
+                 <div class="title">${item.name}</div>
+                 <div class="desc">${item.description}</div>
+                 <div class="price">$${item.price}</div>
+                 <div class="meta">Author: ${data.metadata.author} | Created: ${formatDate(data.metadata.creationDate)}</div>
+                `;
         cont.appendChild(card);
     });
 }
