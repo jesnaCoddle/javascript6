@@ -1,22 +1,40 @@
-let data;
+function formatDate(dateString) {
+    const date = new Date(dateString);
 
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString(undefined, options);
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    const monthIndex = date.getMonth();
+    const monthName = monthNames[monthIndex];
+
+    const day = date.getDate();
+    const year = date.getFullYear();
+
+    return `${monthName} ${day}, ${year}`;
 }
+
+let data;
 
 function loadData() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'items.json', true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var jsonData = JSON.parse(xhr.responseText);
-            data = jsonData;
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            data = JSON.parse(xhr.responseText);
             showItems(data.items);
-            document.getElementById("genDesc").textContent = data.description;
+            document.getElementById("main").textContent = data.description;
+
+        } else {
+            console.error('Error loading JSON:', xhr.status, xhr.statusText);
+            document.getElementById("data-container").innerHTML = "Error loading data.";
         }
     };
+
+    xhr.onerror = function () {
+        console.error('Network Error occurred');
+        document.getElementById("data-container").innerHTML = "A network error occurred.";
+    };
+
     xhr.send();
 }
 
@@ -27,65 +45,91 @@ function showItems(items) {
     items.forEach(item => {
         const card = document.createElement("div");
         card.classList.add("card");
+
+        let creationDate = "Date not available"; 
+
+        if (data.metadata && data.metadata.creationDate) {
+            creationDate = formatDate(data.metadata.creationDate);
+        } else if (item.creationDate) { 
+            creationDate = formatDate(item.creationDate);
+        }
+
         card.innerHTML = `
-                 <div class="title">${item.name}</div>
-                 <div class="desc">${item.description}</div>
-                 <div class="price">$${item.price}</div>
-                 <div class="meta">Author: ${data.metadata.author} | Created: ${formatDate(data.metadata.creationDate)}</div>
-                `;
+            <div class="title">${item.name}</div>
+            <div class="desc">${item.description}</div>
+            <div class="price">$${item.price}</div>
+            <div class="meta">Author: ${data.metadata?.author || "Author not available"} | Created: ${creationDate}</div> 
+        `;
         cont.appendChild(card);
     });
 }
 
+
 function filterByPrice(minPrice) {
-    const filtered = data.items.filter(item => item.price > minPrice);
-    showItems(filtered);
+    if (data && data.items) {
+        const filtered = data.items.filter(item => item.price > minPrice);
+        showItems(filtered);
+    }
 }
 
 function sortItems(by, order) {
-    const sorted = [...data.items].sort((a, b) => {
-        const aVal = a[by];
-        const bVal = b[by];
-        return order === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
-    });
-    showItems(sorted);
+    if (data && data.items) { 
+        const sorted = [...data.items].sort((a, b) => {
+            const aVal = a[by];
+            const bVal = b[by];
+            return order === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
+        });
+        showItems(sorted);
+    }
 }
 
 document.getElementById('addForm').addEventListener('submit', function (event) {
-    event.preventDefault();
+    event.preventDefault(); 
 
-    const name = document.getElementById('name');
-    const desc = document.getElementById('desc');
-    const price = document.getElementById('price');
+    const nameInput = document.getElementById('name');
+    const descInput = document.getElementById('desc');
+    const priceInput = document.getElementById('price');
 
-    let valid = true;
-    if (name.value.trim() === "") {
+    
+    document.getElementById('nameErr').textContent = "";
+    document.getElementById('descErr').textContent = "";
+    document.getElementById('priceErr').textContent = "";
+
+    let isValid = true; 
+
+    if (nameInput.value.trim() === "") {
         document.getElementById('nameErr').textContent = "Required";
-        valid = false;
-    } else { document.getElementById('nameErr').textContent = ""; }
-    if (desc.value.trim() === "") {
-        document.getElementById('descErr').textContent = "Required";
-        valid = false;
-    } else { document.getElementById('descErr').textContent = ""; }
-    if (price.value <= 0) {
-        document.getElementById('priceErr').textContent = "Must be > 0";
-        valid = false;
-    } else { document.getElementById('priceErr').textContent = ""; }
+        isValid = false;
+    }
 
-    if (valid) {
+    if (descInput.value.trim() === "") {
+        document.getElementById('descErr').textContent = "Required";
+        isValid = false;
+    }
+
+    const price = Number(priceInput.value); 
+    if (isNaN(price) || price <= 0) {
+        document.getElementById('priceErr').textContent = "Must be > 0";
+        isValid = false;
+    }
+
+    if (isValid && data && data.items) { 
         const newItem = {
-            name: name.value,
-            description: desc.value,
-            price: parseInt(price.value)
+            name: nameInput.value,
+            description: descInput.value,
+            price: price 
         };
 
         data.items.push(newItem);
-        showItems(data.items);
+        showItems(data.items); 
 
-        name.value = "";
-        desc.value = "";
-        price.value = "";
+      
+        nameInput.value = "";
+        descInput.value = "";
+        priceInput.value = "";
     }
 });
 
 loadData();
+filterByPrice(200);
+sortItems('price', 'desc'); 
