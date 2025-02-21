@@ -16,7 +16,7 @@ function formatDate(dateString) {
 let data;
 
 function loadData() {
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('GET', 'items.json', true);
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -46,15 +46,9 @@ function showItems(items) {
         const card = document.createElement("div");
         card.classList.add("card");
 
-        let creationDate = "Date not available"; 
+        let creationDate = "Date not available";
 
-        if (data.metadata && data.metadata.creationDate) {
-            creationDate = formatDate(data.metadata.creationDate);
-        } else if (item.creationDate) { 
-            creationDate = formatDate(item.creationDate);
-        }
-
-        card.innerHTML = `
+        creationDate = formatDate(data?.metadata?.creationDate ?? item?.creationDate); card.innerHTML = `
             <div class="title">${item.name}</div>
             <div class="desc">${item.description}</div>
             <div class="price">$${item.price}</div>
@@ -73,29 +67,36 @@ function filterByPrice(minPrice) {
 }
 
 function sortItems(by, order) {
-    if (data && data.items) { 
+    if (data?.items) {
         const sorted = [...data.items].sort((a, b) => {
             const aVal = a[by];
             const bVal = b[by];
-            return order === 'asc' ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
+
+            let comparisonResult;
+            if (order === 'asc') {
+                comparisonResult = aVal > bVal ? 1 : -1;
+            } else {
+                comparisonResult = aVal < bVal ? 1 : -1;
+            }
+            return comparisonResult;
         });
         showItems(sorted);
     }
 }
 
 document.getElementById('addForm').addEventListener('submit', function (event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     const nameInput = document.getElementById('name');
     const descInput = document.getElementById('desc');
     const priceInput = document.getElementById('price');
 
-    
+
     document.getElementById('nameErr').textContent = "";
     document.getElementById('descErr').textContent = "";
     document.getElementById('priceErr').textContent = "";
 
-    let isValid = true; 
+    let isValid = true;
 
     if (nameInput.value.trim() === "") {
         document.getElementById('nameErr').textContent = "Required";
@@ -107,23 +108,23 @@ document.getElementById('addForm').addEventListener('submit', function (event) {
         isValid = false;
     }
 
-    const price = Number(priceInput.value); 
+    const price = Number(priceInput.value);
     if (isNaN(price) || price <= 0) {
         document.getElementById('priceErr').textContent = "Must be > 0";
         isValid = false;
     }
 
-    if (isValid && data && data.items) { 
+    if (isValid && data?.items) {
         const newItem = {
             name: nameInput.value,
             description: descInput.value,
-            price: price 
+            price: price
         };
 
         data.items.push(newItem);
-        showItems(data.items); 
+        showItems(data.items);
 
-      
+
         nameInput.value = "";
         descInput.value = "";
         priceInput.value = "";
