@@ -46,9 +46,9 @@ function showItems(items) {
         const card = document.createElement("div");
         card.classList.add("card");
 
-        let creationDate = "Date not available";
 
-        creationDate = formatDate(data?.metadata?.creationDate ?? item?.creationDate); card.innerHTML = `
+
+        const creationDate = formatDate(data?.metadata?.creationDate ?? item?.creationDate); card.innerHTML = `
             <div class="title">${item.name}</div>
             <div class="desc">${item.description}</div>
             <div class="price">$${item.price}</div>
@@ -58,9 +58,8 @@ function showItems(items) {
     });
 }
 
-
 function filterByPrice(minPrice) {
-    if (data && data.items) {
+    if (data?.items) {
         const filtered = data.items.filter(item => item.price > minPrice);
         showItems(filtered);
     }
